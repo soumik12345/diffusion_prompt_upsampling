@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "diffusion-prompt-upsampling"
+version = "0.1.0"
+description = ""
+authors = ["soumik12345 <19soumik.rakshit96@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "diffusion_prompt_upsampling" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+dspy-ai = "^2.4.12"
+instructor = "^1.3.7"
+rich = "^13.7.1"
+weave = "^0.50.12"
+pydantic = "^2.8.2"
+openai = "^1.37.1"
+diffusers = "^0.29.2"
+transformers = "^4.43.3"
+fire = "^0.6.0"
+
+[tool.poetry.group.dev.dependencies]
+poetry = "^1.8.3"
+black = "^24.4.2"
+isort = "^5.13.2"
+ruff = "^0.5.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
