@@ -89,4 +89,7 @@ A few rules:
         judgement: OpenAIPromptAlignmentJudgement = self.predict(
             base_prompt=base_prompt, generated_image=model_output
         )
-        return {"score": judgement.score}
+        return {
+            "score": judgement.score,
+            "is_image_correct": judgement.judgement == "correct",
+        }

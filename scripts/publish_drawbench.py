@@ -13,12 +13,12 @@ def publish_dataset(
         project_name if entity_name is None else f"{entity_name}/{project_name}"
     )
     weave.init(project_name=project_name)
-    dataset = load_dataset("shunk031/DrawBench")
+    dataset = load_dataset("shunk031/DrawBench")["test"].rename_column(
+        "prompts", "prompt"
+    )
     rows = []
-    for data in dataset["test"]:
-        data["category"] = (
-            dataset["test"].features["category"].names[int(data["category"])]
-        )
+    for data in dataset:
+        data["category"] = dataset.features["category"].names[int(data["category"])]
         rows.append(data)
     weave_dataset = weave.Dataset(
         name="DrawBench",
