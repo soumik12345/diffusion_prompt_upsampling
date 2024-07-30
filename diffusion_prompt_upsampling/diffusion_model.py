@@ -24,14 +24,24 @@ class StableDiffusionXLModel(weave.Model):
     enable_cpu_offfload: bool
     completions: Optional[List[dspy.Prediction]] = None
     diffusion_prompt_upsampler: Optional[dspy.Module] = None
+    upsample_prompt: Optional[bool] = False
+    use_stock_negative_prompt: Optional[bool] = False
     _pipeline: DiffusionPipeline
     _upsampler_llm: dspy.Module
 
-    def __init__(self, model_name_or_path: str, enable_cpu_offfload: bool):
+    def __init__(
+        self,
+        model_name_or_path: str,
+        enable_cpu_offfload: bool,
+        upsample_prompt: Optional[bool] = False,
+        use_stock_negative_prompt: Optional[bool] = False,
+    ):
         super().__init__(
             model_name_or_path=model_name_or_path,
             enable_cpu_offfload=enable_cpu_offfload,
         )
+        self.upsample_prompt = upsample_prompt
+        self.use_stock_negative_prompt = use_stock_negative_prompt
         self.completions = (
             self.get_completion_rationales()
             if self.completions is None
@@ -116,25 +126,16 @@ There are a few rules to follow:
         ]
 
     @weave.op()
-    def predict(
+    def generate_image(
         self,
-        base_prompt: str,
+        prompt: str,
         negative_prompt: Optional[str] = None,
         num_inference_steps: Optional[int] = 50,
         image_size: Optional[int] = 1024,
         guidance_scale: Optional[float] = 7.0,
-        upsample_prompt: Optional[bool] = True,
     ) -> str:
-        with dspy.context(lm=self._upsampler_llm):
-            prompt_upsampler_response = (
-                self.diffusion_prompt_upsampler(
-                    self.completions, base_prompt=base_prompt
-                ).answer
-                if upsample_prompt
-                else base_prompt
-            )
         image = self._pipeline(
-            prompt=prompt_upsampler_response,
+            prompt=prompt,
             negative_prompt=negative_prompt,
             num_inference_steps=num_inference_steps,
             height=image_size,
@@ -142,3 +143,35 @@ There are a few rules to follow:
             guidance_scale=guidance_scale,
         ).images[0]
         return base64_encode_image(image)
+
+    @weave.op()
+    def predict(
+        self,
+        base_prompt: str,
+        negative_prompt: Optional[str] = None,
+        num_inference_steps: Optional[int] = 50,
+        image_size: Optional[int] = 1024,
+        guidance_scale: Optional[float] = 7.0,
+    ) -> str:
+        negative_prompt = (
+            STOCK_NEGATIVE_PROMPT
+            if negative_prompt is None and self.use_stock_negative_prompt
+            else negative_prompt
+        )
+        with dspy.context(lm=self._upsampler_llm):
+            prompt_upsampler_response = (
+                self.diffusion_prompt_upsampler(
+                    self.completions, base_prompt=base_prompt
+                ).answer
+                if self.upsample_prompt
+                else base_prompt
+            )
+        return {
+            "image": self.generate_image(
+                prompt=prompt_upsampler_response,
+                negative_prompt=negative_prompt,
+                num_inference_steps=num_inference_steps,
+                image_size=image_size,
+                guidance_scale=guidance_scale,
+            )
+        }

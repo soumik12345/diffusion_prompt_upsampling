@@ -87,7 +87,7 @@ A few rules:
     @weave.op()
     def score(self, base_prompt: str, model_output: Dict) -> Dict:
         judgement: OpenAIPromptAlignmentJudgement = self.predict(
-            base_prompt=base_prompt, generated_image=model_output
+            base_prompt=base_prompt, generated_image=model_output["image"]
         )
         return {
             "score": judgement.score,
