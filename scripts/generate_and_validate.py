@@ -13,7 +13,7 @@ from diffusion_prompt_upsampling.judge_model import OpenAIJudgeModel
 
 def generate_and_validate(
     base_prompt: str,
-    project_name: str,
+    project_name: Optional[str] = "diffusion-prompt-upsample",
     entity_name: Optional[str] = None,
     diffusion_model_name_or_path: Optional[
         str
