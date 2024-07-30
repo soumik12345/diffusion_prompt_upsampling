@@ -3,11 +3,8 @@ from typing import Optional
 import fire
 import rich
 import weave
-from diffusion_prompt_upsampling.diffusion_model import (
-    StableDiffusionXLModel,
-    STOCK_NEGATIVE_PROMPT,
-)
-from diffusion_prompt_upsampling.judge_model import OpenAIJudge
+from diffusion_prompt_upsampling.diffusion_model import StableDiffusionXLModel
+from diffusion_prompt_upsampling.judge_model import OpenAIJudgeModel
 
 
 def generate_and_validate(
@@ -18,6 +15,7 @@ def generate_and_validate(
         str
     ] = "stabilityai/stable-diffusion-xl-base-1.0",
     diffusion_model_enable_cpu_offfload: Optional[bool] = True,
+    upsample_prompt: Optional[bool] = False,
     use_stock_negative_prompt: Optional[bool] = False,
     openai_model: Optional[str] = "gpt-4-turbo",
     judge_model_max_retries: Optional[int] = 5,
@@ -30,28 +28,18 @@ def generate_and_validate(
     diffusion_model = StableDiffusionXLModel(
         model_name_or_path=diffusion_model_name_or_path,
         enable_cpu_offfload=diffusion_model_enable_cpu_offfload,
+        upsample_prompt=upsample_prompt,
+        use_stock_negative_prompt=use_stock_negative_prompt,
     )
-    judge_model = OpenAIJudge(
+    judge_model = OpenAIJudgeModel(
         openai_model=openai_model,
         max_retries=judge_model_max_retries,
         seed=judge_model_seed,
     )
-    negative_prompt = STOCK_NEGATIVE_PROMPT if use_stock_negative_prompt else None
-    base_prompt_image = diffusion_model.predict(
-        base_prompt=base_prompt, negative_prompt=negative_prompt, upsample_prompt=False
-    )
-    upsampled_prompt_image = diffusion_model.predict(
-        base_prompt=base_prompt, negative_prompt=negative_prompt, upsample_prompt=True
-    )
-    judgement_base_prompt_image = judge_model.predict(
-        base_prompt=base_prompt, generated_image=base_prompt_image
-    )
-    judgement_upsampled_prompt_image = judge_model.predict(
-        base_prompt=base_prompt, generated_image=upsampled_prompt_image
-    )
+    image = diffusion_model.predict(base_prompt=base_prompt)["image"]
+    judgement = judge_model.predict(base_prompt=base_prompt, generated_image=image)
 
-    rich.print(f"{judgement_base_prompt_image=}")
-    rich.print(f"{judgement_upsampled_prompt_image=}")
+    rich.print(f"{judgement=}")
 
 
 if __name__ == "__main__":

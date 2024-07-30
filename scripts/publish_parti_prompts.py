@@ -13,10 +13,8 @@ def publish_dataset(
         project_name if entity_name is None else f"{entity_name}/{project_name}"
     )
     weave.init(project_name=project_name)
-    dataset = load_dataset("nateraw/parti-prompts")["train"].rename_column(
-        "Prompt", "prompt"
-    )
-    rows = [data for data in dataset]
+    dataset = load_dataset("nateraw/parti-prompts")["train"]
+    rows = [{"base_prompt": data["Prompt"]} for data in dataset]
     weave_dataset = weave.Dataset(
         name="parti-prompts",
         rows=rows,
