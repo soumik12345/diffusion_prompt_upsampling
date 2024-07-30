@@ -19,6 +19,7 @@ def evaluate_upsampling(
     ] = "stabilityai/stable-diffusion-xl-base-1.0",
     diffusion_model_enable_cpu_offfload: Optional[bool] = True,
     use_stock_negative_prompt: Optional[bool] = False,
+    disable_diffusion_model_progress_bar: Optional[bool] = False,
     openai_model: Optional[str] = "gpt-4-turbo",
     judge_model_max_retries: Optional[int] = 5,
     judge_model_seed: Optional[int] = 42,
@@ -34,6 +35,8 @@ def evaluate_upsampling(
         upsample_prompt=upsample_prompt,
         use_stock_negative_prompt=use_stock_negative_prompt,
     )
+    if disable_diffusion_model_progress_bar:
+        diffusion_model._pipeline.set_progress_bar_config(disable=True)
     judge_model = OpenAIJudgeModel(
         openai_model=openai_model,
         max_retries=judge_model_max_retries,
