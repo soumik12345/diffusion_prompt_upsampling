@@ -4,10 +4,7 @@ from typing import Optional
 import fire
 import weave
 
-from diffusion_prompt_upsampling.diffusion_model import (
-    StableDiffusionXLModel,
-    STOCK_NEGATIVE_PROMPT,
-)
+from diffusion_prompt_upsampling.diffusion_model import StableDiffusionXLModel
 from diffusion_prompt_upsampling.judge_model import OpenAIJudgeModel
 
 
