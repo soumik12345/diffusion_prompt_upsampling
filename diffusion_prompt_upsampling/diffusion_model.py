@@ -7,22 +7,8 @@ from diffusers import AutoPipelineForText2Image, DiffusionPipeline
 
 from .utils import base64_encode_image
 
-upsampler_llm = dspy.OpenAI(
-    model="gpt-4o",
-    system_prompt="""
-You are part of a team of bots that creates images. You work with an assistant bot that will draw anything
-you say in square brackets. For example, outputting "a beautiful morning in the woods with the sun peaking
-through the trees" will trigger your partner bot to output an image of a forest morning, as described.
-You will be prompted by people looking to create detailed, amazing images. The way to accomplish this is to
-take their short prompts and make them extremely detailed and descriptive.
 
-There are a few rules to follow:
-- You will only ever output a single image description per user request.
-- Often times, the base prompt might consist of spelling mistakes or grammatical errors. You should correct
-    such errors before making them extremely detailed and descriptive.
-- Image descriptions must be between 15-80 words. Extra words will be ignored.
-""",
-)
+STOCK_NEGATIVE_PROMPT = "frame, border, 2d, ugly, static, dull, monochrome, distorted face, deformed fingers, scary, horror, nightmare, deformed lips, deformed eyes, deformed hands, deformed legs, impossible physics, absurdly placed objects"
 
 
 class PromptUpsamplingSignature(dspy.Signature):
@@ -38,8 +24,8 @@ class StableDiffusionXLModel(weave.Model):
     enable_cpu_offfload: bool
     completions: Optional[List[dspy.Prediction]] = None
     diffusion_prompt_upsampler: Optional[dspy.Module] = None
-    stock_negative_prompt: Optional[str] = None
     _pipeline: DiffusionPipeline
+    _upsampler_llm: dspy.Module
 
     def __init__(self, model_name_or_path: str, enable_cpu_offfload: bool):
         super().__init__(
@@ -54,11 +40,6 @@ class StableDiffusionXLModel(weave.Model):
         self.diffusion_prompt_upsampler = dspy.MultiChainComparison(
             PromptUpsamplingSignature, M=len(self.completions)
         )
-        self.stock_negative_prompt = (
-            "frame, border, 2d, ugly, static, dull, monochrome, distorted face, deformed fingers, scary, horror, nightmare, deformed lips, deformed eyes, deformed hands, deformed legs, impossible physics, absurdly placed objects"
-            if self.stock_negative_prompt is None
-            else self.stock_negative_prompt
-        )
         self._pipeline = AutoPipelineForText2Image.from_pretrained(
             self.model_name_or_path,
             torch_dtype=torch.float16,
@@ -69,6 +50,22 @@ class StableDiffusionXLModel(weave.Model):
             self._pipeline.enable_model_cpu_offload()
         else:
             self._pipeline = self._pipeline.to("cuda")
+        self._upsampler_llm = dspy.OpenAI(
+            model="gpt-4o",
+            system_prompt="""
+You are part of a team of bots that creates images. You work with an assistant bot that will draw anything
+you say in square brackets. For example, outputting "a beautiful morning in the woods with the sun peaking
+through the trees" will trigger your partner bot to output an image of a forest morning, as described.
+You will be prompted by people looking to create detailed, amazing images. The way to accomplish this is to
+take their short prompts and make them extremely detailed and descriptive.
+
+There are a few rules to follow:
+- You will only ever output a single image description per user request.
+- Often times, the base prompt might consist of spelling mistakes or grammatical errors. You should correct
+    such errors before making them extremely detailed and descriptive.
+- Image descriptions must be between 15-80 words. Extra words will be ignored.
+""",
+        )
 
     def get_completion_rationales(self) -> List[dspy.Prediction]:
         return [
@@ -128,18 +125,14 @@ class StableDiffusionXLModel(weave.Model):
         guidance_scale: Optional[float] = 7.0,
         upsample_prompt: Optional[bool] = True,
     ) -> str:
-        prompt_upsampler_response = (
-            self.diffusion_prompt_upsampler(
-                self.completions, base_prompt=base_prompt
-            ).answer
-            if upsample_prompt
-            else base_prompt
-        )
-        negative_prompt = (
-            negative_prompt
-            if negative_prompt is not None
-            else self.stock_negative_prompt
-        )
+        with dspy.context(lm=self._upsampler_llm):
+            prompt_upsampler_response = (
+                self.diffusion_prompt_upsampler(
+                    self.completions, base_prompt=base_prompt
+                ).answer
+                if upsample_prompt
+                else base_prompt
+            )
         image = self._pipeline(
             prompt=prompt_upsampler_response,
             negative_prompt=negative_prompt,
