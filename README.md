@@ -19,9 +19,13 @@ Check out [github.com/sayakpaul/caption-upsampling](https://github.com/sayakpaul
 | Photo of a serene park setting | ![](./assets/3.png) | ![](./assets/3_u.png) |
 | cartoon drawing of an astronaut riding a horse in outer space | ![](./assets/4.png) | ![](./assets/4_u.png) |
 
-| ![](./assets/sample_generation_trace.gif) | ![](./assets/sample_evaluation_trace.gif) |
-| --- | --- |
-| A sample trace showing a [prompt upsampling workflow on Weave](https://wandb.ai/geekyrakshit/diffusion-prompt-upsample/weave/calls?filter=%7B%22opVersionRefs%22%3A%5B%22weave%3A%2F%2F%2Fgeekyrakshit%2Fdiffusion-prompt-upsample%2Fop%2FStableDiffusionXLModel.predict%3A*%22%5D%7D&peekPath=%2Fgeekyrakshit%2Fdiffusion-prompt-upsample%2Fcalls%2F8addeba5-5956-4acb-8951-d0ff1c8133e7) | A sample trace showing an [evaluation workflow using an LLM judge on Weave](https://wandb.ai/geekyrakshit/diffusion-prompt-upsample/weave/calls?filter=%7B%22opVersionRefs%22%3A%5B%22weave%3A%2F%2F%2Fgeekyrakshit%2Fdiffusion-prompt-upsample%2Fop%2FOpenAIJudgeModel.predict%3A*%22%5D%7D&peekPath=%2Fgeekyrakshit%2Fdiffusion-prompt-upsample%2Fcalls%2F0d118404-9d28-4b91-97c8-b92ca2b1d323) |
+| ![](./assets/sample_generation_trace.gif) | 
+| --- |
+| A sample trace showing a [prompt upsampling workflow on Weave](https://wandb.ai/geekyrakshit/diffusion-prompt-upsample/weave/calls?filter=%7B%22opVersionRefs%22%3A%5B%22weave%3A%2F%2F%2Fgeekyrakshit%2Fdiffusion-prompt-upsample%2Fop%2FStableDiffusionXLModel.predict%3A*%22%5D%7D&peekPath=%2Fgeekyrakshit%2Fdiffusion-prompt-upsample%2Fcalls%2F8addeba5-5956-4acb-8951-d0ff1c8133e7) |
+
+| ![](./assets/sample_evaluation_trace.gif) |
+| --- |
+| A sample trace showing an [evaluation workflow using an LLM judge on Weave](https://wandb.ai/geekyrakshit/diffusion-prompt-upsample/weave/calls?filter=%7B%22opVersionRefs%22%3A%5B%22weave%3A%2F%2F%2Fgeekyrakshit%2Fdiffusion-prompt-upsample%2Fop%2FOpenAIJudgeModel.predict%3A*%22%5D%7D&peekPath=%2Fgeekyrakshit%2Fdiffusion-prompt-upsample%2Fcalls%2F0d118404-9d28-4b91-97c8-b92ca2b1d323) |
 
 ## Installation and Usage Instructions
 
