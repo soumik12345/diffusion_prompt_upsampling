@@ -94,7 +94,7 @@ class OpenAIJudgeModel(weave.Model):
 
     @weave.op()
     def score(self, base_prompt: str, model_output: Dict) -> Dict:
-        judgement: JudgeMent = self.predict(
+        judgement = self.predict(
             base_prompt=base_prompt, generated_image=model_output["image"]
         )
         return {
