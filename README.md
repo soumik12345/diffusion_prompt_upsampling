@@ -1,6 +1,6 @@
 # Prompt Upsampling for Diffusion Models
 
-<a href="https://colab.research.google.com/github/soumik12345/diffusion_prompt_upsampling/blob/main/generate_and_validate.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+<a href="https://colab.research.google.com/github/soumik12345/diffusion_prompt_upsampling/blob/main/notebooks/generate_and_validate.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 Prompting for current generation of text-to-image diffusion models is extremely brittle (such as [Stable Diffusion XL](https://huggingface.co/papers/2307.01952)), i.e, its difficult to create an optimal prompting strategy to reliably generate images of a certain quality and sometimes even reliably following the prompt to generate the image.
 
