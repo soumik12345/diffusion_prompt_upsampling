@@ -1,5 +1,5 @@
 import os
-from typing import Any, Literal
+from typing import Any
 
 import weave
 from weave.integrations.dspy.dspy_sdk import dspy_wrapper
@@ -15,14 +15,17 @@ class DSPyOpenAIMultiModalLM(GPT3):
         self,
         model: str = "gpt-4o",
         api_key: str | None = None,
-        api_provider: Literal["openai"] = "openai",
-        api_base: str | None = None,
-        model_type: Literal["chat", "text"] = None,
         system_prompt: str | None = None,
         **kwargs,
     ):
         super().__init__(
-            model, api_key, api_provider, api_base, model_type, system_prompt, **kwargs
+            model,
+            api_key,
+            api_provider="openai",
+            api_base=None,
+            model_type=None,
+            system_prompt=system_prompt,
+            **kwargs,
         )
         self.model_type = model
         self._openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))

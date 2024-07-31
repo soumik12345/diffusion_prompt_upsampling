@@ -21,7 +21,6 @@ def evaluate_upsampling(
     use_stock_negative_prompt: Optional[bool] = False,
     disable_diffusion_model_progress_bar: Optional[bool] = False,
     openai_model: Optional[str] = "gpt-4-turbo",
-    judge_model_max_retries: Optional[int] = 5,
     judge_model_seed: Optional[int] = 42,
 ):
     project_name = (
@@ -39,7 +38,6 @@ def evaluate_upsampling(
         diffusion_model._pipeline.set_progress_bar_config(disable=True)
     judge_model = OpenAIJudgeModel(
         openai_model=openai_model,
-        max_retries=judge_model_max_retries,
         seed=judge_model_seed,
     )
     evaluation = weave.Evaluation(
