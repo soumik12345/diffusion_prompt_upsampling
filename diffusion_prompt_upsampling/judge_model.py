@@ -90,14 +90,14 @@ class OpenAIJudgeModel(weave.Model):
     def predict(self, base_prompt: str, generated_image: str) -> JudgeMent:
         with dspy.context(lm=self._judgement_llm):
             judgement = self._judgement_module(base_prompt, generated_image)
-        return judgement.dict()
+        return judgement
 
     @weave.op()
     def score(self, base_prompt: str, model_output: Dict) -> Dict:
-        judgement = self.predict(
+        judgement: JudgeMent = self.predict(
             base_prompt=base_prompt, generated_image=model_output["image"]
         )
         return {
-            "score": judgement["score"],
-            "is_image_correct": judgement["judgement"] == "correct",
+            "score": judgement.score,
+            "is_image_correct": judgement.judgement == "correct",
         }
