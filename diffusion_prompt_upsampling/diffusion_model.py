@@ -5,6 +5,7 @@ import torch
 import weave
 from diffusers import AutoPipelineForText2Image, DiffusionPipeline
 
+from .dspy_multi_modal import DSPyOpenAIMultiModalLM
 from .utils import base64_encode_image
 
 
@@ -60,7 +61,7 @@ class StableDiffusionXLModel(weave.Model):
             self._pipeline.enable_model_cpu_offload()
         else:
             self._pipeline = self._pipeline.to("cuda")
-        self._upsampler_llm = dspy.OpenAI(
+        self._upsampler_llm = DSPyOpenAIMultiModalLM(
             model="gpt-4o",
             system_prompt="""
 You are part of a team of bots that creates images. You work with an assistant bot that will draw anything

@@ -9,7 +9,6 @@ packages = [{ include = "diffusion_prompt_upsampling" }]
 [tool.poetry.dependencies]
 python = "^3.10"
 dspy-ai = "^2.4.12"
-instructor = "^1.3.7"
 rich = "^13.7.1"
 weave = "^0.50.12"
 pydantic = "^2.8.2"
