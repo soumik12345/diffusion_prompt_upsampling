@@ -1,5 +1,6 @@
 import base64
 import io
+import re
 from pathlib import Path
 from typing import Optional, Union
 
@@ -26,3 +27,8 @@ def base64_encode_image(
     encoded_string = base64.b64encode(byte_arr.getvalue()).decode("utf-8")
     encoded_string = f"data:{mimetype};base64,{encoded_string}"
     return str(encoded_string)
+
+
+def find_base64_images(input_text):
+    pattern = r"(data:image/(jpeg|png|svg\+xml);base64,[A-Za-z0-9+/=]+)"
+    return [match[0] for match in re.findall(pattern, input_text)]
