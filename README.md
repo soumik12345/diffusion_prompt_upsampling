@@ -18,6 +18,9 @@ Check out [github.com/sayakpaul/caption-upsampling](https://github.com/sayakpaul
 | A bird scaring a scarecrow | ![](./assets/2.png) | ![](./assets/2_u.png) |
 | Photo of a serene park setting | ![](./assets/3.png) | ![](./assets/3_u.png) |
 | cartoon drawing of an astronaut riding a horse in outer space | ![](./assets/4.png) | ![](./assets/4_u.png) |
+| A fish eating a pelican | ![](./assets/5.png) | ![](./assets/5_u.png) |
+
+Its notable that although this prompt upsampling strategy is useful in enhancing the aesthetic quality of the generated images (even while using low-effort base prompts), it doesn't necessarily impact the prompt-following capability of the diffusion model.
 
 | ![](./assets/sample_generation_trace.gif) | 
 | --- |
@@ -90,3 +93,7 @@ NOTES
     You can also use flags syntax for POSITIONAL ARGUMENTS
 ```
 </details>
+
+## Acknowledgement
+
+Grateful to [Weights & Biases](https://wandb.ai/site) for providing the GPU compute and OpenAI credits for the experiments.
