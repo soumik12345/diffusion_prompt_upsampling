@@ -94,6 +94,12 @@ NOTES
 ```
 </details>
 
+## Scope of Further Experiments
+
+- Run evaluations with the [LLM Judge](./diffusion_prompt_upsampling/judge_model.py) using [Weave Evaluations](https://wandb.github.io/weave/guides/core-types/evaluations) on datasets like [DrawBench](https://huggingface.co/datasets/shunk031/DrawBench) and [Parti-Prompts](https://huggingface.co/datasets/nateraw/parti-prompts).
+- Evaluate with a more robust and holistic set of evaluation metrics using [Hemm](https://github.com/wandb/Hemm).
+- Since the entire prompting strategy is implemented using [DSPy](https://dspy-docs.vercel.app), we can attempt to further optimize it using [DSPy Teleprompters](https://dspy-docs.vercel.app/docs/category/teleprompters).
+
 ## Acknowledgement
 
 Grateful to [Weights & Biases](https://wandb.ai/site) for providing the GPU compute and OpenAI credits for the experiments.
