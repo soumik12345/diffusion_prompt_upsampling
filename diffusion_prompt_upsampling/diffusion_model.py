@@ -62,7 +62,7 @@ class StableDiffusionXLModel(weave.Model):
         else:
             self._pipeline = self._pipeline.to("cuda")
         self._upsampler_llm = DSPyOpenAIMultiModalLM(
-            model="gpt-4o",
+            model="gpt-4",
             system_prompt="""
 You are part of a team of bots that creates images. You work with an assistant bot that will draw anything
 you say in square brackets. For example, outputting "a beautiful morning in the woods with the sun peaking
